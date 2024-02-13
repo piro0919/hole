@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { FaQuestionCircle } from "react-icons/fa";
 import Tippy from "@tippyjs/react";
+import usePwa from "use-pwa";
+import { MdDownloadForOffline } from "react-icons/md";
 
 const MySwal = withReactContent(Swal);
 
@@ -33,13 +35,20 @@ export default function Page(): JSX.Element {
         <br />
         また、特定の人物に対する悪口や罵倒、人格否定など一切禁止していません。
         <br />
-        穴に叫ばれた発言は、外部のサーバーなどに保存されることはなく、あらゆる場所において使用されることもありません。
+        穴に叫ばれた内容は、外部のサーバーなどに保存されることはなく、あらゆる場所において使用されることもありません。
         <br />
         穴以外の場所では、常に冷静な判断で、他人に迷惑をかけるような発言は控えましょう。
       </p>
     ),
     []
   );
+  const {
+    appinstalled,
+    canInstallprompt,
+    enabledPwa,
+    isPwa,
+    showInstallPrompt,
+  } = usePwa();
 
   return (
     <div className={styles.wrapper}>
@@ -49,21 +58,28 @@ export default function Page(): JSX.Element {
       <div className={styles.bottomBlock}>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.formInner}>
-            <div className={styles.textareaWrapper}>
-              <textarea
-                {...register("text", { required: true })}
-                className={styles.textarea}
-                placeholder="王様の耳はロバの耳"
-              />
-              <Tippy content={content} trigger="click">
-                <button className={styles.iconButton}>
-                  <FaQuestionCircle color="#333" size={24} />
-                </button>
-              </Tippy>
+            <textarea
+              {...register("text", { required: true })}
+              className={styles.textarea}
+              placeholder="王様の耳はロバの耳"
+            />
+            <div className={styles.formFooter}>
+              <button className={styles.button} type="submit">
+                叫ぶ
+              </button>
+              <div className={styles.iconButtonsWrapper}>
+                <Tippy content={content} trigger="click">
+                  <button>
+                    <FaQuestionCircle color="#333" size={24} />
+                  </button>
+                </Tippy>
+                {!appinstalled && canInstallprompt && enabledPwa && !isPwa ? (
+                  <button onClick={showInstallPrompt}>
+                    <MdDownloadForOffline color="#333" size={28} />
+                  </button>
+                ) : null}
+              </div>
             </div>
-            <button className={styles.button} type="submit">
-              叫ぶ
-            </button>
           </div>
         </form>
       </div>

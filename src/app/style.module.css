@@ -22,10 +22,13 @@
 
 .bottomBlock {
   padding: 0 12px 24px;
+  display: flex;
+  justify-content: center;
 }
 
 .form {
   height: 100%;
+  width: min(100%, 640px);
 }
 
 .formInner {
@@ -33,12 +36,6 @@
   height: 100%;
   grid-template: 1fr auto / auto;
   gap: 12px;
-  justify-items: center;
-}
-
-.textareaWrapper {
-  position: relative;
-  width: min(100%, 640px);
 }
 
 .textarea {
@@ -50,11 +47,11 @@
   height: 100%;
 }
 
-.iconButton {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin: 6px;
+.formFooter {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .button {
@@ -63,4 +60,12 @@
   width: 120px;
   border-radius: 4px;
   color: #333;
+}
+
+.iconButtonsWrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  gap: 12px;
 }
