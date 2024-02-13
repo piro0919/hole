@@ -1,95 +1,72 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useCallback, useMemo, useState } from "react";
+import styles from "./style.module.css";
+import { SubmitHandler, useForm } from "react-hook-form";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { FaQuestionCircle } from "react-icons/fa";
+import Tippy from "@tippyjs/react";
 
-export default function Home() {
+const MySwal = withReactContent(Swal);
+
+type FieldValues = {
+  text: string;
+};
+
+export default function Page(): JSX.Element {
+  const { register, handleSubmit, reset } = useForm<FieldValues>({
+    defaultValues: {
+      text: "",
+    },
+  });
+  const onSubmit = useCallback<SubmitHandler<FieldValues>>(async () => {
+    reset();
+
+    await MySwal.fire({
+      text: "あなたは気持ちがすっきりしました",
+    });
+  }, [reset]);
+  const content = useMemo(
+    () => (
+      <p>
+        穴では、誹謗中傷や個人を特定するような発言を一切禁止していません。
+        <br />
+        また、特定の人物に対する悪口や罵倒、人格否定など一切禁止していません。
+        <br />
+        穴に叫ばれた発言は、外部のサーバーなどに保存されることはなく、あらゆる場所において使用されることもありません。
+        <br />
+        穴以外の場所では、常に冷静な判断で、他人に迷惑をかけるような発言は控えましょう。
+      </p>
+    ),
+    []
+  );
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div className={styles.wrapper}>
+      <div className={styles.topBlock}>
+        <div className={styles.hole} />
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div className={styles.bottomBlock}>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <div className={styles.formInner}>
+            <div className={styles.textareaWrapper}>
+              <textarea
+                {...register("text", { required: true })}
+                className={styles.textarea}
+                placeholder="王様の耳はロバの耳"
+              />
+              <Tippy content={content} trigger="click">
+                <button className={styles.iconButton}>
+                  <FaQuestionCircle color="#333" size={24} />
+                </button>
+              </Tippy>
+            </div>
+            <button className={styles.button} type="submit">
+              叫ぶ
+            </button>
+          </div>
+        </form>
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
